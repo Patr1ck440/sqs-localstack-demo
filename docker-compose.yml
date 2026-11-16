@@ -1,0 +1,53 @@
+# docker-compose.yml
+# LocalStack cu serviciul SQS - backend-ul "AWS fals" folosit de acest demo.
+#
+# Pornire:  docker compose up -d
+# Status:   docker compose ps
+# Oprire:   docker compose down
+#
+# Notă: imaginea 4.14 este fixată intenționat (ultima versiune LocalStack care
+# nu cere LOCALSTACK_AUTH_TOKEN). Vezi secțiunea din README despre token.
+
+services:
+  localstack:
+    # Imagine fixată, nu "latest", ca să nu se schimbe comportamentul peste noapte.
+    image: localstack/localstack:4.14
+
+    # Nume fix, ca să fie ușor de găsit la prezentare (docker ps, docker logs ...).
+    container_name: sqs-demo-localstack
+
+    ports:
+      # 4566 este portul unic pe care LocalStack expune toate API-urile AWS simulate.
+      # "4566:4566" = portul din container -> portul de pe calculatorul nostru.
+      - "4566:4566"
+
+    environment:
+      # Pornim doar SQS: pornește mai repede și nu consumă resurse degeaba.
+      - SERVICES=sqs
+      # Regiunea AWS implicită (LocalStack acceptă orice regiune, dar o fixăm pentru claritate).
+      - AWS_DEFAULT_REGION=us-east-1
+      # Fără loguri de debug (util dacă vrem să vedem ce face LocalStack: pune 1).
+      - DEBUG=0
+      # URL-urile returnate de SQS folosesc calea, nu un nume de host derivat din regiune:
+      #   http://localhost:4566/queue/us-east-1/000000000000/comenzi
+      # Astfel nu depindem de DNS-ul special *.localhost.localstack.cloud.
+      - SQS_ENDPOINT_STRATEGY=path
+      - LOCALSTACK_HOST=localhost:4566
+      # Token-ul de autentificare LocalStack. Pentru imaginea 4.14 poate rămâne gol.
+      # Valoarea vine din fișierul .env (care NU se comite în git). Vezi .env.example.
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:-}
+
+    volumes:
+      # Folder local pentru datele temporare ale LocalStack (ignorat în .gitignore).
+      - ./volume:/var/lib/localstack
+
+    healthcheck:
+      # Endpoint-ul de health al LocalStack. Dacă răspunde cu HTTP 200, serviciul e sus.
+      # "docker compose ps" va arăta (healthy) când containerul este gata de folosit.
+      test: ["CMD-SHELL", "curl -sf http://localhost:4566/_localstack/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+    restart: unless-stopped

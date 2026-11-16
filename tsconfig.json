@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // ES2022 = sintaxa moderna suportata de Node.js 20+ (top-level await, etc.)
+    "target": "ES2022",
+    "lib": ["ES2022"],
+
+    // ESM + tsx: tsx ruleaza fisierele .ts direct (fara pas de build),
+    // iar "Bundler" permite importuri fara extensie .js (ex: "./config").
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    // strict = true: toate verificările de tip sunt pornite.
+    "strict": true,
+
+    // Alte verificări utile pentru cod curat.
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Nu generam JavaScript: tsx se ocupa de rulare, "npm run typecheck" doar verifica.
+    "noEmit": true,
+
+    // Tipurile pentru Node.js (process, console, setTimeout...).
+    "types": ["node"],
+
+    // Nu verificam tipurile din node_modules (mai rapid, evita erori din librarii).
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": false
+  },
+  "include": ["src/**/*.ts"]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "sqs-localstack-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Demo Amazon SQS cu LocalStack: producer, consumer, visibility timeout, reincercari si dead-letter queue",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "setup": "bash scripts/01-create-queues.sh",
+    "producer": "tsx src/producer.ts",
+    "consumer": "tsx src/consumer.ts",
+    "dlq": "tsx src/dlq-reader.ts",
+    "cleanup": "bash scripts/99-cleanup.sh",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "3.1169.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

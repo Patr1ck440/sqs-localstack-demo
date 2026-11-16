@@ -1,0 +1,19 @@
+# Dependinte Node.js
+node_modules/
+
+# Variabile de mediu (poate conține LOCALSTACK_AUTH_TOKEN - secret!)
+.env
+
+# Datele temporare ale LocalStack (create de docker-compose.yml)
+volume/
+
+# Loguri
+*.log
+npm-debug.log*
+logs/
+
+# Fisiere de sistem / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

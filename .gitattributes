@@ -1,0 +1,5 @@
+# Păstrează LF în repository și la checkout, ca scripturile .sh să ruleze
+# corect pe Linux/macOS/WSL/Git Bash (CRLF ar produce eroarea
+# "bad interpreter: /usr/bin/env bash^M").
+* text=auto eol=lf
+*.sh text eol=lf
